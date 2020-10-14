@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
 
-namespace SmartAdminMvc
+namespace ApiMiddleware
 {
     public static class WebApiConfig
     {
@@ -20,7 +20,8 @@ namespace SmartAdminMvc
                 defaults: new { id = RouteParameter.Optional }
             );
 
-            
+            config.Formatters.Remove(config.Formatters.XmlFormatter);
+            config.Formatters.JsonFormatter.SerializerSettings.Formatting = Newtonsoft.Json.Formatting.Indented;
         }
     }
 }

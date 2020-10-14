@@ -169,9 +169,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Clases\SharedMethods.cs" />
-    <Compile Include="Controllers\DepartamentosApiController.cs" />
     <Compile Include="Controllers\DepartamentosController.cs" />
     <Compile Include="Database\DEPARTAMENTOS.cs">
       <DependentUpon>Model1.tt</DependentUpon>
@@ -410,10 +408,6 @@
     <Content Include="Content\img\loading.gif" />
     <Content Include="Content\img\logo-blacknwhite.png" />
     <Content Include="Content\img\logo-blue.png" />
-    <Content Include="Content\img\logo-casajaar-navbar.png" />
-    <Content Include="Content\img\logo-casajaar.png" />
-    <Content Include="Content\img\logo-corinsa.png" />
-    <Content Include="Content\img\logo-corinsa2.png" />
     <Content Include="Content\img\logo-o.png" />
     <Content Include="Content\img\logo-pale.png" />
     <Content Include="Content\img\logo-white.png" />
@@ -1066,12 +1060,6 @@
     <Content Include="Scripts\plugin\ckeditor\README.md" />
     <Content Include="Scripts\plugin\ckeditor\samples\plugins\htmlwriter\assets\outputforflash\outputforflash.fla" />
     <Content Include="Scripts\plugin\ckeditor\skins\moono\readme.md" />
-    <Content Include="Views\Account\Error.cshtml" />
-    <Content Include="Views\Account\ForgotPassword.cshtml" />
-    <Content Include="Views\Account\Lock.cshtml" />
-    <Content Include="Views\Account\Login.cshtml" />
-    <Content Include="Views\Account\Register.cshtml" />
-    <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\_Aside.cshtml" />
     <Content Include="Views\Shared\_CurrentUser.cshtml" />
     <Content Include="Views\Shared\_Footer.cshtml" />
@@ -1084,15 +1072,8 @@
     <Content Include="Views\Shared\_TopRight.cshtml" />
     <Content Include="Views\web.config" />
     <Content Include="Views\_ViewStart.cshtml" />
-    <Content Include="Views\Account\Login - Copy.cshtml" />
     <Content Include="Scripts\jquery-3.2.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.2.1.min.map" />
-    <Content Include="Views\Manage\AddPhoneNumber.cshtml" />
-    <Content Include="Views\Manage\ChangePassword.cshtml" />
-    <Content Include="Views\Manage\Index.cshtml" />
-    <Content Include="Views\Manage\ManageLogins.cshtml" />
-    <Content Include="Views\Manage\SetPassword.cshtml" />
-    <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Departamentos\Index.cshtml" />
     <Content Include="Views\Departamentos\FormDepartamento.cshtml" />
     <None Include="Web.Debug.config">

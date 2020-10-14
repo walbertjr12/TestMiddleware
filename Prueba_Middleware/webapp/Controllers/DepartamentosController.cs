@@ -1,9 +1,14 @@
-﻿using SmartAdminMvc.Clases;
+﻿using Newtonsoft.Json;
+using SmartAdminMvc.Clases;
 using SmartAdminMvc.Database;
 using SmartAdminMvc.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
@@ -12,6 +17,8 @@ namespace SmartAdminMvc.Controllers
     public class DepartamentosController : Controller
     {
         private PruebaAdmisionEntities db;
+        private string URI = "https://localhost:44392/";
+        private static readonly HttpClient client = new HttpClient();
 
         public DepartamentosController()
         {
@@ -29,13 +36,30 @@ namespace SmartAdminMvc.Controllers
             return View();
         }
 
-        public JsonResult GetDepartamentos()
+        public async Task<JsonResult> GetDepartamentos()
         {
-            var departamentos = db.DEPARTAMENTOS.Select(x=> new DepartamentoViewModel() { DESCRIPCION= x.DESCRIPCION, NOMBRE = x.NOMBRE, REFERENCIA= x.REFERENCIA, ID_DEPARTAMENTO = x.ID_DEPARTAMENTO }).ToList();
-            var jsonResult = Json(new { data = departamentos }, JsonRequestBehavior.AllowGet);
-            jsonResult.MaxJsonLength = int.MaxValue;
+            try
+            {
+                client.DefaultRequestHeaders.Clear();
 
-            return jsonResult;
+                var response = await client.GetAsync(URI + "api/Departamentos");
+
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    string result = await response.Content.ReadAsStringAsync();
+                    var departamentoslist = JsonConvert.DeserializeObject<List<DepartamentoViewModel>>(result);
+
+                    return Json(new { data = departamentoslist }, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    return Json(new ResponseResult { Result = false, Message = response.StatusCode.ToString() });
+                }
+            }
+            catch (Exception e)
+            {
+                return Json(new ResponseResult { Result = false, Message = e.ToString() });
+            }
         }
 
         public PartialViewResult FormDepartamento()
@@ -43,34 +67,23 @@ namespace SmartAdminMvc.Controllers
             return PartialView();
         }
 
-        public JsonResult Save(DepartamentosViewModel departamento)
+        public async Task<JsonResult> Save(DepartamentosViewModel departamento)
         {
-            ResponseResult response = new ResponseResult() { Message ="", Result = false };
+            string content = JsonConvert.SerializeObject(departamento);
+            HttpContent httpContent = new StringContent(content, Encoding.UTF8, "application/json");
 
-            var departamentoinDb = new DEPARTAMENTOS() { REFERENCIA = departamento.REFERENCIA, DESCRIPCION = departamento.DESCRIPCION, NOMBRE = departamento.NOMBRE };
-
-            db.DEPARTAMENTOS.Add(departamentoinDb);
-            db.SaveChanges();
-
-            if (departamento != null)
+            var responseCreationFields = await client.PostAsync(URI + "api/Departamentos", httpContent);
+            if (responseCreationFields.StatusCode == HttpStatusCode.OK)
             {
-                if (departamento.EMPLEADOS.Count() > 0)
-                {
-                    foreach (var item in departamento.EMPLEADOS)
-                    {
-                        db.EMPLEADOS.Add(new EMPLEADOS() { DESCRIPCION = item.DESCRIPCION, FECHA_NACIMIENTO = item.FECHA_NACIMIENTO, GENERO_SEXO = item.GENERO_SEXO, ID_DEPARTAMENTO = departamentoinDb.ID_DEPARTAMENTO, NOMBRE= item.NOMBRE });
-                        db.SaveChanges();
-                    }
-                }
+                string result = await responseCreationFields.Content.ReadAsStringAsync();
+                var response = JsonConvert.DeserializeObject<ResponseResult>(result);
+
+                return Json(new { data = response }, JsonRequestBehavior.AllowGet);
             }
-
-            response.Message = "Departamento almacenado correctamente";
-            response.Result = true;
-
-            var jsonResult = Json(new { data = response }, JsonRequestBehavior.AllowGet);
-            jsonResult.MaxJsonLength = int.MaxValue;
-
-            return jsonResult;
+            else
+            {
+                return Json(new ResponseResult { Result = false, Message = responseCreationFields.StatusCode.ToString() });
+            }
         }
     }
 }
