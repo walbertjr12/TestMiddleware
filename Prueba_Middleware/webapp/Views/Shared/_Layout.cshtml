@@ -1,0 +1,279 @@
+﻿<!DOCTYPE html>
+<html lang="en-us" id="@ViewBag.PageId" class="@Settings.CurrentTheme">
+
+
+
+<head>
+    <meta charset=" utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+    <title> Prueba Middleware </title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    @*CDN DATATABLE
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.css">
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">*@
+
+
+    <!-- Basic Styles -->
+    @Styles.Render("~/content/smartadmin")
+    <!-- FAVICONS -->
+    <link rel="shortcut icon" href="~/content/img/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="~/content/img/favicon.ico" type="image/x-icon">
+
+    <!-- GOOGLE FONT -->
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,300,400,700">
+
+    <!-- Specifying a Webpage Icon for Web Clip
+         Ref: https://developer.apple.com/library/ios/documentation/AppleApplications/Reference/SafariWebContent/ConfiguringWebApplications/ConfiguringWebApplications.html -->
+    <link rel="apple-touch-icon" href="~/content/img/splash/sptouch-icon-iphone.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="~/content/img/splash/touch-icon-ipad.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="~/content/img/splash/touch-icon-iphone-retina.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="~/content/img/splash/touch-icon-ipad-retina.png">
+
+    <!-- iOS web-app metas : hides Safari UI Components and Changes Status Bar Appearance -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <!-- Startup image for web apps -->
+    <link rel="apple-touch-startup-image" href="~/content/img/splash/ipad-landscape.png" media="screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:landscape)">
+    <link rel="apple-touch-startup-image" href="~/content/img/splash/ipad-portrait.png" media="screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:portrait)">
+    <link rel="apple-touch-startup-image" href="~/content/img/splash/iphone.png" media="screen and (max-device-width: 320px)">
+
+
+    <style>
+        .btn-glyphicon {
+            padding: 8px;
+            background: #ffffff;
+            margin-right: 4px;
+        }
+
+        .icon-btn {
+            padding: 1px 15px 3px 2px;
+            border-radius: 50px;
+        }
+
+        body.modal-open-noscroll {
+            margin-right: 0 !important;
+            overflow: hidden;
+        }
+
+        .modal-open-noscroll .navbar-fixed-top, .modal-open .navbar-fixed-bottom {
+            margin-right: 0 !important;
+        }
+    </style>
+
+</head>
+
+
+<body class="@ViewBag.PageClass @Settings.CurrentTheme">
+
+    @if (Request.IsAuthenticated)
+    {
+        Html.RenderPartial("_Header", RenderSection("topright", false));
+    }
+    @*@{ Html.RenderPartial("_Header", RenderSection("topright", false)); }*@
+
+
+    @{ Html.RenderPartialIf("_Aside", Request.IsAuthenticated); }
+    <div id="main" role="main">
+        @{ Html.RenderPartialIf("_Ribbon", Request.IsAuthenticated); }
+
+        <div id="content">
+            @RenderBody()
+        </div>
+
+    </div>
+    @if (Request.IsAuthenticated)
+    {
+        @*Html.RenderPartial("_Footer");*@
+        Html.RenderPartialIf("_Tiles", Settings.EnableTiles);
+    }
+    @{ Html.RenderPartial("_Scripts", RenderSection("pagespecific", false)); }
+
+
+    <div class="modal" id="modalWaitingTime" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document" style="margin-top: 5%;">
+            <div class="modal-content">
+                <div class="modal-body col-lg-12">
+                    <div class="col-lg-12 no-padding" style="text-align: center;">
+                        <h2><b>Cargando...</b></h2>
+                        <div class="col-lg-12 no-padding">
+                            <img class="status2" id="statusID" src="~/Content/img/loading-tools.gif" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="modal bounceInDown animated" id="myModal" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-body" id="modalBody">
+                <div class="form-group">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*@Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/bootstrap")
+        @RenderSection("scripts", required: false)*@
+</body>
+
+</html>
+
+<script>
+
+
+    $(document).ready(function () {
+        $('input[type=text]').css("text-transform", "uppercase");
+
+        $('.modal').on('show.bs.modal', function () {
+            if ($(document).height() > $(window).height()) {
+                // no-scroll
+                $('body').addClass("modal-open-noscroll");
+            }
+            else {
+                $('body').removeClass("modal-open-noscroll");
+            }
+        });
+        $('.modal').on('hide.bs.modal', function () {
+            $('body').removeClass("modal-open-noscroll");
+        });
+    });
+
+
+    function AjaxReloadTable(url, element) {
+        var ElementID = $(element).attr("id");
+        var columnsTable = $("#" + ElementID).find('tr')[0].cells.length;
+        $('#' + ElementID + ' tbody').html('<tr style="background-color:white;" class="odd"><td valign="top" colspan="' + columnsTable + '" class="dataTables_empty"><center><img src="../Content/img/loading.gif" class="style-loading"/></center></td></tr>');
+        var table = new $.fn.dataTable.Api("#" + ElementID);
+        table.ajax.url(url).load(function (data) {
+            //console.log(data);
+        });
+
+    }
+
+    function LoadWaitNotification() {
+        $("#modalWaitingTime").modal({ backdrop: 'static', keyboard: false }, "show");
+        $('#statusID').fadeIn();
+
+
+    }
+
+    function UnloadWaitNotification() {
+        $("#modalWaitingTime").modal("hide");
+        $('#statusID').hide();
+    }
+
+    function SuccessMessage(message) {
+        $.smallBox({
+            title: "Información ",
+            content: "<i ></i> <i>" + message + "</i>",
+            color: "#659265",
+            iconSmall: "fa fa-check fa-2x fadeInRight animated",
+            timeout: 9000
+        });
+    }
+
+    function FailureMessage(message) {
+        $.smallBox({
+            title: "Advertencia ",
+            content: "<i ></i> <i>" + message + "</i>",
+            color: "#C20202",
+            iconSmall: "fa fa-times fadeInRight animated",
+            timeout: 9000
+        });
+    }
+
+    function ConvertJsonDateToShortDate(data) {
+        // This function converts a json date to a short date
+        // e.g. /Date(1538377200000)/ to 10/1/2018
+        if (data != null) {
+            const dateValue = new Date(parseInt(data.substr(6)));
+        return dateValue.toLocaleDateString('zh-Hans-CN', { year: "numeric", month: "2-digit", day:"2-digit" });
+        }
+        return data;
+    }
+
+    function formatNumber(amount, decimals) {
+
+        amount += ''; // por si pasan un numero en vez de un string
+        amount = parseFloat(amount.replace(/[^0-9\.]/g, '')); // elimino cualquier cosa que no sea numero o punto
+
+        decimals = decimals || 0; // por si la variable no fue fue pasada
+
+        // si no es un numero o es igual a cero retorno el mismo cero
+        if (isNaN(amount) || amount === 0)
+            return parseFloat(0).toFixed(decimals);
+
+        // si es mayor o menor que cero retorno el valor formateado como numero
+        amount = '' + amount.toFixed(decimals);
+
+        var amount_parts = amount.split('.'),
+            regexp = /(\d+)(\d{3})/;
+
+        while (regexp.test(amount_parts[0]))
+            amount_parts[0] = amount_parts[0].replace(regexp, '$1' + ',' + '$2');
+
+        return amount_parts.join('.');
+    }
+
+    function zfill(number, width) {
+        var numberOutput = Math.abs(number); /* Valor absoluto del número */
+        var length = number.toString().length; /* Largo del número */
+        var zero = "0"; /* String de cero */
+
+        if (width <= length) {
+            if (number < 0) {
+                return ("-" + numberOutput.toString());
+            } else {
+                return numberOutput.toString();
+            }
+        } else {
+            if (number < 0) {
+                return ("-" + (zero.repeat(width - length)) + numberOutput.toString());
+            } else {
+                return ((zero.repeat(width - length)) + numberOutput.toString());
+            }
+        }
+    }
+
+
+
+
+</script>
+
+<style>
+    .style-loading {
+        width: 10%;
+        height: 10%;
+    }
+
+    .status2 {
+        position: relative;
+        /*left:50%;*/ /* centers the loading animation horizontally one the screen */
+        /*top:50%;*/ /* centers the loading animation vertically one the screen */
+        width: 60%;
+        height: 50%;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+
+    .invalid {
+        color: #a94442;
+        /*margin-left: 12px;*/
+    }
+
+    .my-valid-class {
+        color: green; /* green */
+    }
+</style>

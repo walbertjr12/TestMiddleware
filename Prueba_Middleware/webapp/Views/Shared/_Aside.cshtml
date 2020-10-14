@@ -1,0 +1,186 @@
+﻿<style>
+    .informationIcon {
+        background-color: dimgray;
+    }
+</style>
+
+<!-- Left panel : Navigation area -->
+<!-- Note: This width of the aside area can be adjusted through LESS variables -->
+<aside id="left-panel">
+
+    <!-- end user info -->
+    <!-- NAVIGATION : This navigation is also responsive
+
+    To make this navigation dynamic please make sure to link the node
+    (the reference to the nav > ul) after page load. Or the navigation
+    will not initialize.
+    -->
+    <nav>
+        <!-- NOTE: Notice the gaps after each icon usage <i></i>..
+        Please note that these links work a bit different than
+        traditional href="" links. See documentation for details.
+        -->
+
+        <ul class="list-group">
+
+            <!--HOME-->
+            <li class="@Html.RouteIf("index", "active")">
+                <a href="@Url.Action("index", "home")" title="Inicio"><i class="fa fa-lg fa-fw fa-home"></i><span class="menu-item-parent">Inicio</span></a>
+            </li>
+
+            <!--CITAS-->
+            @{
+                if (User.IsInRole(RoleName.verCitas) || User.IsInRole(RoleName.adminCitas))
+                {
+                    <li class="@Html.RouteIf("indexcitas", "active")">
+                        <a href="@Url.Action("IndexCitas", "Citas")" title="Citas"><i class="fa fa-lg fa-fw fa-list-ul"></i><span class="menu-item-parent">Citas</span></a>
+                    </li>
+                }
+            }
+
+            <!--AGENDA-->
+            @{
+                if (User.IsInRole(RoleName.verAgenda))
+                {
+                    <li class="@Html.RouteIf("CalendarioCitas", "active")">
+                        <a href="@Url.Action("CalendarioCitas", "Citas")" title="Agenda"><i class="fa fa-lg fa-fw fa-calendar"></i><span class="menu-item-parent">Agenda</span></a>
+                    </li>
+                }
+            }
+
+            <!--REVISIONES-->
+            @{
+                if (User.IsInRole(RoleName.verRevicionesRecepcion))
+                {
+                    <li class="@Html.RouteIf("RevisionesVehiculo", "active")">
+                        <a href="@Url.Action("RevisionesVehiculo", "Revisiones")" title="Agenda"><i class="fa fa-lg fa-fw fa-clipboard"></i><span class="menu-item-parent">Revisiones</span></a>
+                    </li>
+                }
+            }
+
+            <!--CLIENTES-->
+            @{
+                if (User.IsInRole(RoleName.adminClientes) || User.IsInRole(RoleName.verClientes))
+                {
+                    <li class="@Html.RouteIf("indexclientes", "active")">
+                        <a href="@Url.Action("IndexClientes", "Clientes")" title="Clientes"><i class="fa fa-lg fa-fw fa-user"></i><span class="menu-item-parent">Clientes</span></a>
+                    </li>
+                }
+            }
+
+            <!--VEHICULOS-->
+            @{
+                if (User.IsInRole(RoleName.verVehiculos) || User.IsInRole(RoleName.adminVehiculos))
+                {
+                    <li class="@Html.RouteIf("indexvehiculos", "active")">
+                        <a href="@Url.Action("IndexVehiculos", "Vehiculos")" title="Vehiculos"><i class="fa fa-lg fa-fw fa-automobile"></i><span class="menu-item-parent">Vehículos</span></a>
+                    </li>
+                }
+            }
+
+            <!--CATALOGO PREVENTIVO-->
+            @{
+                if (User.IsInRole(RoleName.adminCatalogoPreventivo) || User.IsInRole(RoleName.verCatalogoPreventivo))
+                {
+                    <li class="@Html.RouteIf("indexcatalogos", "active")">
+                        <a href="@Url.Action("IndexCatalogos", "Catalogos")" title="Catalogos"><i class="fa fa-lg fa-fw fa-book"></i><span class="menu-item-parent">Catálogo Preventivo</span></a>
+                    </li>
+                }
+            }
+
+            <!--SERVICIOS CORRECTIVOS-->
+            @{
+                if (User.IsInRole(RoleName.adminServiciosCorrectivos) || User.IsInRole(RoleName.verServiciosCorrectivos))
+                {
+                    <li class="@Html.RouteIf("IndexServiciosCorrectivos", "active")">
+                        <a href="@Url.Action("IndexServiciosCorrectivos", "ServiciosCorrectivos")" title="Servicios Correctivos"><i class="fa fa-lg fa-fw fa-gears"></i><span class="menu-item-parent">Serv. Correctivos</span></a>
+                    </li>
+                }
+            }
+
+            <!--REPUESTOS-->
+            @{
+                if (User.IsInRole(RoleName.verRepuestos) || User.IsInRole(RoleName.adminRepuestos))
+                {
+                    <li class="@Html.RouteIf("IndexRepuestos", "active")">
+                        <a href="@Url.Action("IndexRepuestos", "Repuestos")" title="Insumos"><i class="fa fa-lg fa-fw fa-wrench"></i><span class="menu-item-parent">Repuestos</span></a>
+                    </li>
+                }
+            }
+
+            <!--REV PREVENTIVAS-->
+            @{
+                if (User.IsInRole(RoleName.verRevisiones))
+                {
+                    <li class="@Html.RouteIf("indexrevisiones", "active")">
+                        <a href="@Url.Action("IndexRevisiones", "Revisiones")" title="Revisiones"><i class="fa fa-lg fa-fw fa-list-alt"></i><span class="menu-item-parent">Inf. Rev. Preventivas</span></a>
+                    </li>
+                }
+            }
+
+            <!--INSPECCIONES-->
+            @{
+                if (User.IsInRole(RoleName.verInspecciones) || User.IsInRole(RoleName.adminInspecciones))
+                {
+                    <li class="@Html.RouteIf("indexinspecciones", "active")">
+                        <a href="@Url.Action("IndexInspecciones", "Inspecciones")" title="Inspecciones"><i class="fa fa-lg fa-fw fa-check-square-o"></i><span class="menu-item-parent">Inspecciones</span></a>
+                    </li>
+                }
+            }
+
+            <!--COLABORADORES-->
+            @{
+                if (User.IsInRole(RoleName.verColaboradores) || User.IsInRole(RoleName.adminColaboradores))
+                {
+                    <li class="@Html.RouteIf("indexcolaboradores", "active")">
+                        <a href="@Url.Action("IndexColaboradores", "Colaboradores")" title="Colaboradores"><i class="fa fa-lg fa-fw fa-users"></i><span class="menu-item-parent">Colaboradores</span></a>
+                    </li>
+                }
+            }
+
+            <!--DASHBOARD-->
+            @{
+                if (User.IsInRole(RoleName.admin) || User.IsInRole(RoleName.verDashboards))
+                {
+                    <li class="@Html.RouteIf("index", "")">
+                        <a href="#" title="Dashboard"><i class="fa fa-lg fa-fw fa-dashboard"></i> <span class="menu-item-parent">Dashboard</span></a>
+                        <ul>
+                            <li class="@Html.RouteIf("DashboardCitas", "active")">
+                                <a href="@Url.Action("DashboardCitas", "Dashboards")" title="Citas Dashboard"><span class="menu-item-parent">Citas</span></a>
+                            </li>
+                            <li class="@Html.RouteIf("DashboardInsumos", "active")">
+                                <a href="@Url.Action("DashboardInsumos", "Dashboards")" title="Insumos Dashboard"><span class="menu-item-parent">Insumos</span></a>
+                            </li>
+                        </ul>
+                    </li>
+
+                }
+            }
+
+            <!--SEGURIDAD-->
+            @{
+                if (User.IsInRole(RoleName.admin) || User.IsInRole(RoleName.koalaAdmin))
+                {
+                    <li class="@Html.RouteIf("UsuariosIndex", "active")">
+                        <a href="@Url.Action("UsuariosIndex", "Seguridad")" title="Seguridad"><i class="fa fa-lg fa-fw fa-lock"></i><span class="menu-item-parent">Seguridad</span></a>
+                    </li>
+                }
+            }
+
+            <!--ROLES-->
+            @{
+                if (User.IsInRole(RoleName.koalaAdmin))
+                {
+                    <li class="@Html.RouteIf("RolesIndex", "active")">
+                        <a href="@Url.Action("RolesIndex", "Roles")" title="Roles"><i class="fa fa-lg fa-fw fa-key"></i><span class="menu-item-parent">Roles</span></a>
+                    </li>
+                }
+            }
+        </ul>
+    </nav>
+    <span class="minifyme" data-action="minifyMenu">
+        <i class="fa fa-arrow-circle-left hit"></i>
+    </span>
+
+</aside>
+<!-- END NAVIGATION -->

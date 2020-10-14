@@ -1,0 +1,345 @@
+﻿<style>
+    html, body {
+        background-image: url('../../Content/img/wallpaperDmax.jpg');
+        background-size: cover;
+        background-repeat: no-repeat;
+        height: 100%;
+        font-family: 'Numans', sans-serif;
+    }
+
+    body {
+        position: relative;
+        background-color: #000;
+    }
+
+        body::before {
+            content: ' ';
+            display: block;
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.5;
+            background-color: black;
+            background-size: cover;
+        }
+
+    .texto_grande {
+        font-size: 1.5rem;
+        color: white;
+    }
+
+    #icone_grande {
+        font-size: 5rem;
+        color: #fff;
+    }
+
+    .button4 {
+        border-radius: 12px;
+    }
+
+    .button5 {
+        border-radius: 12px;
+    }
+
+    .isDisabled {
+        color: currentColor;
+        cursor: not-allowed;
+        opacity: 0.5;
+        text-decoration: none;
+    }
+</style>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div>
+    <div class="row">
+        <div class="col-md-2">
+            <!--CITAS-->
+            @{
+                if (User.IsInRole(RoleName.verCitas) || User.IsInRole(RoleName.adminCitas))
+                {
+                    <a href="@Url.Action("IndexCitas", "Citas")" class="btn btn-block btn-lg btn-primary button4">
+                        <i class="fa fa-list-ol" id="icone_grande"></i> <br><br>
+                        <span class="texto_grande"> Citas</span>
+                    </a>
+                }
+                else
+                {
+                    <a class="isDisabled btn btn-block btn-lg btn-primary button4">
+                        <i class="fa fa-list-ol" id="icone_grande"></i> <br><br>
+                        <span class="texto_grande"> Citas</span>
+                    </a>
+                }
+            }
+        </div>
+
+        <!--AGENDA-->
+        <div class="col-md-2">
+            @{
+                if (User.IsInRole(RoleName.verAgenda))
+                {
+                    <a href="@Url.Action("CalendarioCitas", "Citas")" class="btn btn-block btn-lg btn-primary button4">
+                        <i class="fa fa-calendar" id="icone_grande"></i> <br><br>
+                        <span class="texto_grande"> Agenda</span>
+                    </a>
+                }
+                else
+                {
+                    <a class="isDisabled btn btn-block btn-lg btn-primary button4">
+                        <i class="fa fa-calendar" id="icone_grande"></i> <br><br>
+                        <span class="texto_grande"> Agenda</span>
+                    </a>
+                }
+            }
+        </div>
+
+        <!--REVISIONES VEHICULO-->
+        <div class="col-md-2">
+            @{
+                if (User.IsInRole(RoleName.verRevicionesRecepcion))
+                {
+                    <a href="@Url.Action("RevisionesVehiculo", "Revisiones")" class="btn btn-block btn-lg btn-primary button4">
+                        <i class="fa fa-clipboard" id="icone_grande"></i> <br><br />
+                        <span class="texto_grande"> Revisiones</span>
+                    </a>
+                }
+                else
+                {
+                    <a class="isDisabled btn btn-block btn-lg btn-primary button4">
+                        <i class="fa fa-clipboard" id="icone_grande"></i> <br><br>
+                        <span class="texto_grande"> Revisiones</span>
+                    </a>
+                }
+            }
+        </div>
+
+        <!--DASHBOARDS-->
+        <div class="col-md-2">
+            @{
+                if (User.IsInRole(RoleName.admin))
+                {
+                    <div class="btn-group btn-block">
+                        <a href="@Url.Action("RevisionesVehiculo", "Revisiones")" class="btn btn-block btn-lg button4 btn-info dropdown-toggle" data-toggle="dropdown">
+                            <i class="fa fa-dashboard" id="icone_grande"></i> <br><br />
+                            <span class="texto_grande"> Dashboards</span>
+                        </a>
+                        @*<a class="btn btn-danger dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></a>*@
+                        <ul class="dropdown-menu" style="background-color:white; border-radius:12px">
+                            <li>
+                                <a class="fa fa-lg fa-list-ul" href="@Url.Action("DashboardCitas", "Dashboards")"> Citas</a>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                                <a class="fa fa-lg fa-wrench" href="@Url.Action("DashboardInsumos", "Dashboards")"> Insumos</a>
+                            </li>
+                        </ul>
+                    </div>
+                }
+                else
+                {
+                    <a class="isDisabled btn btn-block btn-lg btn-info button4">
+                        <i class="fa fa-dashboard" id="icone_grande"></i> <br><br>
+                        <span class="texto_grande"> Dashboards</span>
+                    </a>
+                }
+            }
+        </div>
+
+        <!--VEHICULOS-->
+        <div class="col-md-2">
+            @{
+                if (User.IsInRole(RoleName.verVehiculos) || User.IsInRole(RoleName.adminVehiculos))
+                {
+                    <a href="@Url.Action("IndexVehiculos", "Vehiculos")" class="btn btn-block btn-lg btn-success button4">
+                        <i class="fa fa-car" id="icone_grande"></i> <br><br>
+                        <span class="texto_grande"> Vehiculos</span>
+                    </a>
+                }
+                else
+                {
+                    <a class="isDisabled btn btn-block btn-lg btn-success button4">
+                        <i class="fa fa-car" id="icone_grande"></i> <br><br>
+                        <span class="texto_grande"> Vehiculos</span>
+                    </a>
+                }
+            }
+        </div>
+
+        <!--CLIENTES-->
+        <div class="col-md-2">
+            @{
+                if (User.IsInRole(RoleName.adminClientes) || User.IsInRole(RoleName.verClientes))
+                {
+                    <a href="@Url.Action("IndexClientes", "Clientes")" class="btn btn-block btn-lg btn-success button4">
+                        <i class="fa fa-user" id="icone_grande"></i> <br><br>
+                        <span class="texto_grande"> Clientes</span>
+                    </a>
+                }
+                else
+                {
+                    <a class="isDisabled btn btn-block btn-lg btn-success button4">
+                        <i class="fa fa-user" id="icone_grande"></i> <br><br>
+                        <span class="texto_grande"> Clientes</span>
+                    </a>
+                }
+            }
+        </div>
+    </div>
+    <br />
+
+
+
+    <div class="row">
+
+        <!--CATALOGO PREVENTIVO-->
+        <div class="col-md-2">
+            @{
+                if (User.IsInRole(RoleName.adminCatalogoPreventivo) || User.IsInRole(RoleName.verCatalogoPreventivo))
+                {
+                    <a href="@Url.Action("IndexCatalogos", "Catalogos")" class="btn btn-block btn-lg btn-warning button4">
+                        <i class="fa fa-book" id="icone_grande"></i> <br><br>
+                        <span class="texto_grande"> Catálogo Preventivo</span>
+                    </a>
+                }
+                else
+                {
+                    <a class="isDisabled btn btn-block btn-lg btn-warning button4">
+                        <i class="fa fa-book" id="icone_grande"></i> <br><br>
+                        <span class="texto_grande"> Catálogo Preventivo</span>
+                    </a>
+                }
+            }
+        </div>
+
+        <!--SERVICIOS CORRECTIVOS-->
+        <div class="col-md-2">
+            @{
+                if (User.IsInRole(RoleName.adminServiciosCorrectivos) || User.IsInRole(RoleName.verServiciosCorrectivos))
+                {
+                    <a href="@Url.Action("IndexServiciosCorrectivos", "ServiciosCorrectivos")" class="btn btn-block btn-lg btn-warning button4">
+                        <i class="fa fa-gears" id="icone_grande"></i> <br><br>
+                        <span class="texto_grande"> Servicios Correctivos</span>
+                    </a>
+                }
+                else
+                {
+                    <a class="isDisabled btn btn-block btn-lg btn-warning button4">
+                        <i class="fa fa-gears" id="icone_grande"></i> <br><br>
+                        <span class="texto_grande"> Servicios Correctivos</span>
+                    </a>
+                }
+            }
+        </div>
+
+        <!--REPUESTOS-->
+        <div class="col-md-2">
+            @{
+                if (User.IsInRole(RoleName.verRepuestos) || User.IsInRole(RoleName.adminRepuestos))
+                {
+                    <a href="@Url.Action("IndexRepuestos", "Repuestos")" class="btn btn-block btn-lg btn-warning button4">
+                        <i class="fa fa-wrench" id="icone_grande"></i> <br><br>
+                        <span class="texto_grande"> Repuestos</span>
+                    </a>
+                }
+                else
+                {
+                    <a class="isDisabled btn btn-block btn-lg btn-warning button4">
+                        <i class="fa fa-wrench" id="icone_grande"></i> <br><br>
+                        <span class="texto_grande"> Repuestos</span>
+                    </a>
+                }
+            }
+        </div>
+
+        <!--INSPECCIONES INTERNAS / EXTERNAS-->
+        <div class="col-md-2">
+            @{
+                if (User.IsInRole(RoleName.adminInspecciones) || User.IsInRole(RoleName.verInspecciones))
+                {
+                    <a href="@Url.Action("IndexInspecciones", "Inspecciones")" class="btn btn-block btn-lg btn-warning button4">
+                        <i class="fa fa-check-square-o" id="icone_grande"></i> <br><br>
+                        <span class="texto_grande"> Inspecciones Int/Ext</span>
+                    </a>
+                }
+                else
+                {
+                    <a class="isDisabled btn btn-block btn-lg btn-warning button4">
+                        <i class="fa fa-check-square-o" id="icone_grande"></i> <br><br>
+                        <span class="texto_grande"> Inspecciones Int/Ext</span>
+                    </a>
+                }
+            }
+        </div>
+
+        <!--INF REVISIONES PREVENTIVAS-->
+        <div class="col-md-2">
+            @{
+                if (User.IsInRole(RoleName.verRevisiones))
+                {
+                    <a href="@Url.Action("IndexRevisiones", "Revisiones")" class="btn btn-block btn-lg btn-info button4">
+                        <i class="fa fa-list-alt" id="icone_grande"></i> <br>
+                        <span class="texto_grande"> Inf. Revisiones <br /> Preventivas</span>
+                    </a>
+                }
+                else
+                {
+                    <a class="isDisabled btn btn-block btn-lg btn-info button4">
+                        <i class="fa fa-list-alt" id="icone_grande"></i> <br><br>
+                        <span class="texto_grande"> Inf. Revisiones <br /> Preventivas</span>
+                    </a>
+                }
+            }
+        </div>
+
+        <!--COLABORADORES-->
+        <div class="col-md-2">
+            @{
+                if (User.IsInRole(RoleName.adminColaboradores) || User.IsInRole(RoleName.verColaboradores))
+                {
+                    <a href="@Url.Action("IndexColaboradores", "Colaboradores")" class="btn btn-block btn-lg btn-success button4">
+                        <i class="fa fa-users" id="icone_grande"></i> <br><br>
+                        <span class="texto_grande"> Colaboradores</span>
+                    </a>
+                }
+                else
+                {
+                    <a class="isDisabled btn btn-block btn-lg btn-success button4">
+                        <i class="fa fa-users" id="icone_grande"></i> <br><br>
+                        <span class="texto_grande"> Colaboradores</span>
+                    </a>
+                }
+            }
+        </div>
+    </div>
+    <br />
+
+    <div class="row">
+
+        <!--SEGURIDAD-->
+        <div class="col-md-2">
+            @{
+                if (User.IsInRole(RoleName.admin) || User.IsInRole(RoleName.koalaAdmin))
+                {
+                    <a href="@Url.Action("UsuariosIndex", "Seguridad")" class="btn btn-block btn-lg btn-danger button4">
+                        <i class="fa fa-lock" id="icone_grande"></i> <br><br>
+                        <span class="texto_grande"> Seguridad</span>
+                    </a>
+                }
+                else
+                {
+                    <a class="isDisabled btn btn-block btn-lg btn-danger button4">
+                        <i class="fa fa-lock" id="icone_grande"></i> <br><br>
+                        <span class="texto_grande"> Seguridad</span>
+                    </a>
+                }
+            }
+        </div>
+    </div>
+
+</div>

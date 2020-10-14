@@ -1,0 +1,206 @@
+﻿
+@{
+    ViewBag.Title = "Departamentos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .btn {
+        cursor: pointer;
+    }
+</style>
+
+<!-- MAIN CONTENT -->
+<div class="content">
+    <!-- widget grid -->
+    <section id="widget-grid" class="">
+
+        <!-- row -->
+        <div class="row">
+            <article class="col-sm-12 col-md-12 col-lg-12">
+                <div class="jarviswidget jarviswidget-color-blueDark jarviswidget-sortable" id="wid-id-0" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-custombutton="false" data-widget-deletebutton="false">
+                    <header>
+                        <span class="widget-icon"> <i class="fa fa-user"></i> </span>
+                        <h2>
+                            <strong>
+                                Departamentos
+                            </strong>
+                        </h2>
+                            <div class="widget-toolbar" role="menu">
+                                <button class="btn btn-primary" onclick="NuevoDepartamento()"><i class="fa fa-plus-circle"></i> Nuevo</button>
+                            </div>
+
+                    </header>
+
+                    <!-- widget div-->
+                    <div>
+
+                        <!-- widget content -->
+                        <div class="widget-body no-padding">
+
+                            <table id="tableDepartamentos" class="table table-striped table-bordered" width="100%">
+
+                                <thead>
+                                    <tr>
+                                        <th class="hasinput" style="width:5%">
+                                            @*<input type="text" class="form-control" placeholder="ID" />*@
+                                        </th>
+                                        <th class="hasinput" style="width:30%">
+                                            <input type="text" class="form-control" placeholder="Nombre" />
+                                        </th>
+                                        
+                                        <th style="width:15%"></th>
+                                    </tr>
+                                    <tr>
+                                        <th data-hide="phone">ID</th>
+                                        <th data-class="expand">Nombre</th>
+                                        <th data-class="expand">Referencia</th>
+                                        <th data-class="expand">Descripcion</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+
+                                <tbody></tbody>
+
+                            </table>
+
+                        </div>
+                        <!-- end widget content -->
+
+                    </div>
+                    <!-- end widget div -->
+
+                </div>
+                <!-- end widget -->
+
+            </article>
+            <!-- WIDGET END -->
+
+        </div>
+
+        <!-- end row -->
+        <!-- end row -->
+
+    </section>
+    <!-- end widget grid -->
+
+</div>
+
+<!--Modal Nuevo Departamento-->
+<div class="modal fade" id="modalNuevoDepartamento" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" id="DepartamentoForm">
+        </div>
+    </div>
+</div>
+
+<!--Modal Nuevo Detalle Cliente-->
+<div class="modal fade" id="modalDetalleCliente" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" id="DetalleclienteForm">
+        </div>
+    </div>
+</div>
+
+<!-- END MAIN CONTENT -->
+@section pagespecific {
+
+    <script src="~/Scripts/moment.min.js"></script>
+    <script src="~/Scripts/fullcalendar.js"></script>
+    <script src="~/Scripts/locale/es-us.js"></script>
+
+    <script type="text/javascript">
+
+        var tableDepartamentos = $('#tableDepartamentos');
+
+        $(document).ready(function () {
+
+            var otable = tableDepartamentos.DataTable({
+                "sDom": "<'dt-toolbar'<'col-xs-12 col-sm-6'f><'col-sm-6 col-xs-12 hidden-xs'l>r>" +
+                    "t" +
+                    "<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
+                ajax: {
+                    url: '@Url.Action("GetDepartamentos", "Departamentos")',
+                    type: "get",
+                    dataType: "json",
+                    beforeSend: function () {
+                        LoadWaitNotification();
+                    },
+                    complete: function () {
+                        UnloadWaitNotification();
+                    }
+                },
+                columns: [
+                    { data: "ID_DEPARTAMENTO", autoWidth: true },
+                    { data: "NOMBRE", autoWidth: true },
+                    { data: "REFERENCIA", autoWidth: true },
+                    { data: "DESCRIPCION", autoWidth: true },
+                ],
+                'pageLength': 10,
+                'lengthMenu': [[10, 25, 50, 100, 150], [10, 25, 50, 100, 150]],
+                scroller: true,
+                destroy: true,
+                "order": [[0, "asc"]],
+                "language": {
+                    "sProcessing": "Procesando...",
+                    "sLengthMenu": "Mostrar _MENU_ registros",
+                    "sZeroRecords": "No se encontraron resultados",
+                    "sEmptyTable": "Ningún dato disponible en esta tabla",
+                    "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                    "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                    "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+                    "sInfoPostFix": "",
+                    "sSearch": "Buscar:     ",
+                    "sUrl": "",
+                    "sInfoThousands": ",",
+                    "sLoadingRecords": "Cargando...",
+                    "oPaginate": {
+                        "sFirst": "Primero",
+                        "sLast": "Último",
+                        "sNext": "Siguiente",
+                        "sPrevious": "Anterior"
+                    },
+                    "oAria": {
+                        "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+                        "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                    }
+                }
+            });
+
+            // Apply the filter
+            $("#tableDepartamentos thead th input[type=text]").on('keyup change', function () {
+                otable
+                    .column($(this).parent().index() + ':visible')
+                    .search(this.value)
+                    .draw();
+            });
+            /* END COLUMN FILTER */
+        })
+
+        
+
+    function NuevoDepartamento() {
+        $.ajax({
+            url: '@Url.Action("FormDepartamento", "Departamentos")',
+            type: "get",
+            data: { id: 0 },
+                beforeSend: function () {
+                    LoadWaitNotification();
+                },
+                complete: function () {
+                    UnloadWaitNotification();
+                }
+            }).done(function (data) {
+                $("#DepartamentoForm").html(data);
+                $("#modalNuevoDepartamento").modal('show');
+            }).fail(function (error) {
+                console.log(error);
+            });
+        }
+
+
+    </script>
+}
+
+
+

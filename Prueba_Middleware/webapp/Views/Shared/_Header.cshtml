@@ -1,0 +1,29 @@
+﻿    <!-- HEADER -->
+<style>
+    #logo img {
+    width: 35%;
+    height: 90%;
+}
+</style>
+
+<header id="header">
+    <div id="logo-group">
+
+        <!-- PLACE YOUR LOGO HERE -->
+        <span id="logo"> <img src="~/content/img/logo-casajaar-navbar.png"> </span>
+
+    </div>
+    <section id="top-right">
+        @if (@Model is HelperResult)
+        {
+            @Model
+        }
+        else
+        {
+            <div class="pull-right">
+                @Html.Partial("_TopRight")
+            </div>
+        }
+    </section>
+</header>
+<!-- END HEADER -->

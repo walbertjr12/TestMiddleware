@@ -1,0 +1,204 @@
+﻿@model LoginViewModel
+@{
+    Layout = "";
+    ViewBag.PageId = "extr-page";
+    ViewBag.PageClass = "animated fadeInDown";
+}
+<title> Portal Web Taller </title>
+<link rel="shortcut icon" href="~/content/img/favicon.ico" type="image/x-icon">
+
+<link href="~/Content/css/smartadmin-skins.min.css" rel="stylesheet" />
+<link href="~/Content/css/smartadmin-production.min.css" rel="stylesheet" />
+<link href="~/Content/css/demo.min.css" rel="stylesheet" />
+<link href="~/Content/css/your_style.css" rel="stylesheet" />
+<link href="~/Content/css/bootstrap.min.css" rel="stylesheet" />
+<link href="~/Content/css/font-awesome.min.css" rel="stylesheet" />
+<style>
+    body {
+        font-family: "Poppins", sans-serif;
+        height: 100vh;
+    }
+
+    html, body {
+        background-image: url('../../Content/img/wallpaper_casajaar.jpg');
+        background-size: cover;
+        background-repeat: no-repeat;
+        height: 100%;
+        font-family: 'Numans', sans-serif;
+    }
+
+    a {
+        color: #92badd;
+        display: inline-block;
+        text-decoration: none;
+        font-weight: 400;
+    }
+
+    h2 {
+        text-align: center;
+        font-size: 16px;
+        font-weight: 600;
+        text-transform: uppercase;
+        display: inline-block;
+        margin: 40px 8px 10px 8px;
+        color: #cccccc;
+    }
+    /* STRUCTURE */
+    .wrapper {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        justify-content: center;
+        width: 100%;
+        min-height: 100%;
+        padding: 20px;
+    }
+
+    #formContent {
+        -webkit-border-radius: 10px 10px 10px 10px;
+        border-radius: 10px 10px 10px 10px;
+        background: #fff;
+        padding: 30px;
+        width: 90%;
+        max-width: 450px;
+        position: relative;
+        padding: 0px;
+        -webkit-box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
+        box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
+        text-align: center;
+    }
+
+    #formFooter {
+        background-color: #f6f6f6;
+        border-top: 1px solid #dce8f1;
+        padding: 25px;
+        text-align: center;
+        -webkit-border-radius: 0 0 10px 10px;
+        border-radius: 0 0 10px 10px;
+    }
+
+    body {
+        position: relative;
+        background-color: #000;
+    }
+
+        body::before {
+            content: ' ';
+            display: block;
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.5;
+            background-color: black;
+            background-size: cover;
+        }
+
+    #content {
+        position: relative;
+        width: 100%;
+        height: 600px;
+    }
+</style>
+
+
+<div id="content" class="container">
+    <!------ Include the above in your HEAD tag ---------->
+    <div class="wrapper fadeInDown">
+        <div id="formContent">
+            <!-- Tabs Titles -->
+            <!-- Icon -->
+            <div class="fadeIn first">
+                <br />
+                <img src="~/Content/img/logo-casajaar.png" id="icon" alt="User Icon" />
+                <br />
+                <br />
+            </div>
+            <form action="@Url.Action("login", "account")" method="POST" id="login-form" class="smart-form client-form">
+                <header>
+                    Portal Web Taller
+                </header>
+                @Html.AntiForgeryToken()
+                @Html.ValidationBootstrap()
+                <fieldset>
+                    <section>
+                        <label class="label">Usuario</label>
+                        <label class="input">
+                            <i class="icon-append fa fa-user"></i>
+                            <input name="Username">
+                            <b class="tooltip tooltip-top-right"><i class="fa fa-user txt-color-teal"></i> Ingrese su usuario.</b>
+                        </label>
+                    </section>
+
+                    <section>
+                        <label class="label">Contraseña </label>
+                        <label class="input">
+                            <i class="icon-append fa fa-lock"></i>
+                            <input type="password" name="Password">
+                            <b class="tooltip tooltip-top-right"><i class="fa fa-lock txt-color-teal"></i> Ingrese su contraseña.</b>
+                        </label>
+                    </section>
+                </fieldset>
+                <footer>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa fa-sign-in"></i>&nbsp;Ingresar
+                    </button>
+                </footer>
+            </form>
+
+
+            <!-- Remind Passowrd -->
+
+        </div>
+    </div>
+</div>
+
+
+<script src="~/Scripts/libs/jquery-2.1.1.min.js"></script>
+<script src="~/Scripts/plugin/jquery-validate/jquery.validate.min.js"></script>
+<script src="~/Scripts/bootstrap/bootstrap.min.js"></script>
+
+
+
+<script type="text/javascript">
+
+    var form = $("#login-form");
+
+    $(function () {
+        // Validation
+
+
+        form.validate({
+            // Rules for form validation
+            rules: {
+                Username: {
+                    required: true
+                },
+                Password: {
+                    required: true,
+                    minlength: 3,
+                    maxlength: 20
+                }
+            },
+
+            // Messages for form validation
+            messages: {
+                Username: {
+                    required: 'Ingrese su usuario',
+                    email: 'Usuario no valido'
+                },
+                Password: {
+                    required: 'Ingrese su contraseña '
+                }
+            },
+
+            // Do not change code below
+            errorPlacement: function (error, element) {
+                error.insertAfter(element.parent());
+            }
+        });
+    });
+
+</script>

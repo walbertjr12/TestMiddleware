@@ -1,0 +1,202 @@
+﻿@model SmartAdminMvc.Database.DEPARTAMENTOS
+
+<style>
+    .my-error-class {
+        color: #FF0000; /* red */
+    }
+
+    .my-valid-class {
+        color: green; /* green */
+    }
+
+    .error {
+        margin-left: 12px;
+    }
+</style>
+
+@{
+    ViewBag.Title = "Cliente";
+}
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+        &times;
+    </button>
+    <h4 class="modal-title">
+        <i class="fa fa-plus"></i>
+        &nbsp; Agregar Nuevo Departamento
+    </h4>
+</div>
+<div class="modal-body" style="overflow-y:auto;height:480px;">
+    <form id="FormDepartamento">
+        @Html.HiddenFor(m => m.ID_DEPARTAMENTO)
+        <div class="row">
+            <div class="form-group col-md-4">
+                @Html.LabelFor(m => m.NOMBRE, "Nombre")
+                @Html.EditorFor(m => m.NOMBRE, new { htmlAttributes = new { @class = "form-control", @style = "text-transform: uppercase", autofocus = "autofocus" } })
+            </div>
+            <div class="form-group col-md-4">
+                @Html.LabelFor(m => m.REFERENCIA, "Referencia")
+                @Html.TextBoxFor(m => m.REFERENCIA, new { @class = "form-control" })
+            </div>
+            <div class="form-group col-md-4">
+                @Html.LabelFor(m => m.DESCRIPCION, "Descripción")
+                @Html.TextAreaFor(m => m.DESCRIPCION, new { @class = "form-control ", @style = "resize: none; WIDTH: 100%; HEIGHT: 50px; text-transform: uppercase;" })
+            </div>
+        </div>
+        <button class="btn btn-success" onclick="AddEmpleado()" type="button">Agregar Empleado</button>
+        <table id="tableEmpleados" class="table table-striped table-bordered" width="100%">
+            <thead>
+                <tr>
+                    <th data-hide="phone">Nombre</th>
+                    <th data-class="expand">Descripcion</th>
+                    <th data-class="expand">Género</th>
+                    <th data-class="expand">Fecha Nacimiento</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+
+
+    </form>
+</div>
+<div class="modal-footer">
+    <button type='button' class='btn btn-danger' data-dismiss='modal'><i class="glyphicon glyphicon-remove"></i>&nbsp;Cancelar</button>
+    <button type='button' class="btn btn-success" onclick="GuardarDepartamento()"><i class="glyphicon glyphicon-floppy-saved"></i>&nbsp;Guardar</button>
+</div>
+
+    <script>
+
+    document.getElementById('NOMBRE').focus();
+
+    $('.select2').select2({ width: '100%' });
+
+    var formDepartamento = $("#FormDepartamento");
+
+    var tableEmpleados = $("#tableEmpleados").DataTable({
+        "dom": '',
+        "columnDefs": [
+            {
+                "searchable": false
+            },
+        ]
+
+    });
+
+    formDepartamento.validate({
+        ignore: [],
+        rules: {
+            NOMBRE: {
+                required: true,
+                maxlength: 100
+            },
+            REFERENCIA: {
+                required: true,
+            },
+            DESCRIPCION: {
+                required: true,
+            },
+        },
+        messages: {
+            NOMBRE: {
+                required: "*Debe escribir el nombre del departamento.",
+                maxlength: jQuery.format("Ingrese máximo {0} caracteres. ")
+            },
+            REFERENCIA: {
+                required: "*Debe escribir la referencia.",
+            },
+            DESCRIPCION: {
+                required: "*Debe escribir la descripción.",
+            },
+        },
+        errorClass: "my-error-class",
+        validClass: "my-valid-class",
+        errorPlacement: function (error, element) {
+            if (element.hasClass('select2') && element.next('.select2-container').length) {
+                error.insertAfter(element.next('.select2-container'));
+            } else {
+                error.insertAfter(element);
+            }
+        }
+    });
+
+        function GuardarDepartamento() {
+            var empleados = [];
+            $('#tableEmpleados').DataTable().rows().every(function (rowIdx, tableLoop, rowLoop) {
+                var row = rowIdx + 1;
+            var item = {
+                NOMBRE: $("#nombre" + row).val(),
+                DESCRIPCION: $("#descripcion" + row).val(),
+                GENERO_SEXO: $("#genero" + row).val(),
+                FECHA_NACIMIENTO: $("#fecha" + row).val(),
+            };
+            empleados.push(item);
+            })
+
+            var model = {
+                NOMBRE: $("#NOMBRE").val(),
+                REFERENCIA: $("#REFERENCIA").val(),
+                DESCRIPCION: $("#DESCRIPCION").val(),
+                EMPLEADOS: empleados
+            }
+
+            console.log(model);
+        if (formDepartamento.valid()) {
+
+            $.ajax({
+                url: '@Url.Action("Save", "Departamentos")',
+                type: "POST",
+                dataType: "JSON",
+                beforeSend: function () {
+                    LoadWaitNotification();
+                },
+                complete: function () {
+                    UnloadWaitNotification();
+                },
+                data: model,
+                success:
+                    function (data) {
+                        var success = data.data.Result;
+                        var message = data.data.Message;
+                        if (success == true) {
+                            SuccessMessage(message);
+                            $("#modalNuevoDepartamento").modal('hide');
+                            AjaxReloadTable('@Url.Action("GetDepartamentos", "Departamentos")', $('#tableDepartamentos'));
+                        }
+                        else {
+                            FailureMessage(message);
+                        }
+                    },
+                error: function (data) {
+                    FailureMessage("Error al intentar guardar el registro.");
+                }
+            });
+            }
+    }
+
+        var valor = 1;
+
+    function AddEmpleado() {
+        tableEmpleados.row.add([
+            `<input type="text" id="nombre${valor}" class="form-control"/>`,
+            `<input type="text" id="descripcion${valor}" class="form-control"/>`,
+            `<input type="text" id="genero${valor}" class="form-control" maxlength="1"/>`,
+            `<input type="date" id="fecha${valor}" class="form-control"/>`,
+            `<button id="del" type="button" class="btn btn-danger"><i class="fa fa-trash"></i></button>`
+        ]).draw(false);
+        valor = valor + 1;
+        };
+
+        $('#tableEmpleados tbody').on('click', '#del', function () {
+            tableEmpleados
+            .row($(this).parents('tr'))
+            .remove()
+                .draw();
+
+            valor = valor - 1;
+    });
+
+    </script>
+
+

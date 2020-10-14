@@ -1,0 +1,145 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="PruebaAdmisionModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="DEPARTAMENTOS">
+          <Key>
+            <PropertyRef Name="ID_DEPARTAMENTO" />
+          </Key>
+          <Property Name="ID_DEPARTAMENTO" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NOMBRE" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="REFERENCIA" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="DESCRIPCION" Type="varchar" MaxLength="250" Nullable="false" />
+        </EntityType>
+        <EntityType Name="EMPLEADOS">
+          <Key>
+            <PropertyRef Name="ID_EMPLEADO" />
+          </Key>
+          <Property Name="ID_EMPLEADO" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DESCRIPCION" Type="varchar" MaxLength="250" Nullable="false" />
+          <Property Name="GENERO_SEXO" Type="varchar" MaxLength="1" Nullable="false" />
+          <Property Name="FECHA_NACIMIENTO" Type="date" Nullable="false" />
+          <Property Name="ID_DEPARTAMENTO" Type="int" Nullable="false" />
+          <Property Name="NOMBRE" Type="varchar" MaxLength="30" />
+        </EntityType>
+        <Association Name="FK__EMPLEADOS__ID_DE__25869641">
+          <End Role="DEPARTAMENTOS" Type="Self.DEPARTAMENTOS" Multiplicity="1" />
+          <End Role="EMPLEADOS" Type="Self.EMPLEADOS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DEPARTAMENTOS">
+              <PropertyRef Name="ID_DEPARTAMENTO" />
+            </Principal>
+            <Dependent Role="EMPLEADOS">
+              <PropertyRef Name="ID_DEPARTAMENTO" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="PruebaAdmisionModelStoreContainer">
+          <EntitySet Name="DEPARTAMENTOS" EntityType="Self.DEPARTAMENTOS" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EMPLEADOS" EntityType="Self.EMPLEADOS" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__EMPLEADOS__ID_DE__25869641" Association="Self.FK__EMPLEADOS__ID_DE__25869641">
+            <End Role="DEPARTAMENTOS" EntitySet="DEPARTAMENTOS" />
+            <End Role="EMPLEADOS" EntitySet="EMPLEADOS" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="PruebaAdmisionModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="DEPARTAMENTOS">
+          <Key>
+            <PropertyRef Name="ID_DEPARTAMENTO" />
+          </Key>
+          <Property Name="ID_DEPARTAMENTO" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NOMBRE" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="REFERENCIA" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="DESCRIPCION" Type="String" MaxLength="250" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="EMPLEADOS" Relationship="Self.FK__EMPLEADOS__ID_DE__25869641" FromRole="DEPARTAMENTOS" ToRole="EMPLEADOS" />
+        </EntityType>
+        <EntityType Name="EMPLEADOS">
+          <Key>
+            <PropertyRef Name="ID_EMPLEADO" />
+          </Key>
+          <Property Name="ID_EMPLEADO" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DESCRIPCION" Type="String" MaxLength="250" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="GENERO_SEXO" Type="String" MaxLength="1" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="FECHA_NACIMIENTO" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="ID_DEPARTAMENTO" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="DEPARTAMENTOS" Relationship="Self.FK__EMPLEADOS__ID_DE__25869641" FromRole="EMPLEADOS" ToRole="DEPARTAMENTOS" />
+          <Property Name="NOMBRE" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <Association Name="FK__EMPLEADOS__ID_DE__25869641">
+          <End Role="DEPARTAMENTOS" Type="Self.DEPARTAMENTOS" Multiplicity="1" />
+          <End Role="EMPLEADOS" Type="Self.EMPLEADOS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DEPARTAMENTOS">
+              <PropertyRef Name="ID_DEPARTAMENTO" />
+            </Principal>
+            <Dependent Role="EMPLEADOS">
+              <PropertyRef Name="ID_DEPARTAMENTO" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="PruebaAdmisionEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="DEPARTAMENTOS" EntityType="Self.DEPARTAMENTOS" />
+          <EntitySet Name="EMPLEADOS" EntityType="Self.EMPLEADOS" />
+          <AssociationSet Name="FK__EMPLEADOS__ID_DE__25869641" Association="Self.FK__EMPLEADOS__ID_DE__25869641">
+            <End Role="DEPARTAMENTOS" EntitySet="DEPARTAMENTOS" />
+            <End Role="EMPLEADOS" EntitySet="EMPLEADOS" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="PruebaAdmisionModelStoreContainer" CdmEntityContainer="PruebaAdmisionEntities">
+          <EntitySetMapping Name="DEPARTAMENTOS">
+            <EntityTypeMapping TypeName="PruebaAdmisionModel.DEPARTAMENTOS">
+              <MappingFragment StoreEntitySet="DEPARTAMENTOS">
+                <ScalarProperty Name="ID_DEPARTAMENTO" ColumnName="ID_DEPARTAMENTO" />
+                <ScalarProperty Name="NOMBRE" ColumnName="NOMBRE" />
+                <ScalarProperty Name="REFERENCIA" ColumnName="REFERENCIA" />
+                <ScalarProperty Name="DESCRIPCION" ColumnName="DESCRIPCION" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EMPLEADOS">
+            <EntityTypeMapping TypeName="PruebaAdmisionModel.EMPLEADOS">
+              <MappingFragment StoreEntitySet="EMPLEADOS">
+                <ScalarProperty Name="NOMBRE" ColumnName="NOMBRE" />
+                <ScalarProperty Name="ID_EMPLEADO" ColumnName="ID_EMPLEADO" />
+                <ScalarProperty Name="DESCRIPCION" ColumnName="DESCRIPCION" />
+                <ScalarProperty Name="GENERO_SEXO" ColumnName="GENERO_SEXO" />
+                <ScalarProperty Name="FECHA_NACIMIENTO" ColumnName="FECHA_NACIMIENTO" />
+                <ScalarProperty Name="ID_DEPARTAMENTO" ColumnName="ID_DEPARTAMENTO" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Ninguno" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
